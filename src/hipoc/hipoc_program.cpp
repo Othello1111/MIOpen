@@ -213,7 +213,7 @@ struct HIPOCProgramImpl
         const std::string src =
             !kernel_src.empty() ? kernel_src : is_kernel_str ? program : GetKernelSrc(program);
 
-        if(miopen::EndsWith(filename, ".cpp"))
+        if((miopen::EndsWith(filename, ".cpp")) || (miopen::EndsWith(filename, ".cl")))
         {
 #if MIOPEN_BUILD_DEV
             params += " -Werror" + HipKernelWarningsString();
@@ -221,14 +221,7 @@ struct HIPOCProgramImpl
             params += " -Wno-everything";
 #endif
         }
-        else if(miopen::EndsWith(filename, ".cl"))
-        {
-#if MIOPEN_BUILD_DEV
-            params += " -Werror" + OclKernelWarningsString();
-#else
-            params += " -Wno-everything";
-#endif
-        }
+
 #if MIOPEN_USE_COMGR /// \todo Refactor when functionality stabilize.
         BuildCodeObjectInMemory(params, src, filename);
 #else
